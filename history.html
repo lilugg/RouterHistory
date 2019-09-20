@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <a href="javascript:;" data-to='/'>主页</a>
+    <a href="javascript:;" data-to='/me'>我的</a>
+    <a href="javascript:;" data-to='/you'>你的</a>
+    <div id="box"></div>
+    <script>
+        //使用方法README.md
+        class Router{
+            constructor ({routes}) {
+                this.routes = routes
+                this.initHistory()
+                this.init() 
+            }
+            initHistory () {
+                window.addEventListener('popstate',()=>{//回退时触发popstate
+                    this.updata(window.location.pathname)//每次点击让点击路径出栈
+                })
+            }
+            init () {//初始化
+               let arr = document.querySelectorAll('a')//获取所有a元素
+               arr = [...arr]//转为真数组
+               arr.forEach(item=>{//遍历给每一项添加点击事件
+                    item.onclick = () => {
+                        let path=item.getAttribute('data-to')//获取绑定自定义属性
+                        window.history.pushState({}, null, path)//每次点击让点击路径进入栈中
+                        this.updata(path)
+                    }
+               })
+            }
+            updata(path){
+               let innerHtml = this.routes.filter(item => item.path === path)[0].component//根据参数过滤数据
+               box.innerHTML=innerHtml//绑定到页面
+            }
+        }
+        new Router({//传入路由表数据
+            routes:[{
+                path:"/",
+                component:'主页'
+            },{
+                path:"/me",
+                component:'我的'  
+            },{
+                path:"/you",
+                component:'你的'
+            }]
+        })
+    </script>
+</body>
+</htm
